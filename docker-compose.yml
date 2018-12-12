@@ -1,0 +1,36 @@
+version: '2'
+
+
+
+# Define the services/containers to be run
+
+services:
+
+  openserver:  #name of your service
+
+    image: minnoserver # specify the directory of the Dockerfile
+    command: node setup.js && pm2 pm2-docker start route.js
+
+    ports:
+
+      - "8000:8000" #specify ports forwarding
+
+    links:
+
+      - database # link this service to the database service
+
+    volumes:
+
+      - ./data/user:/usr/src/minnoserver/user
+      - ./config.js:/usr/src/minnoserver/config.js
+
+    depends_on:
+
+      - database
+
+
+  database: # name of the service
+
+    image: mongo # specify image to build container from
+    volumes:
+      - ./data/db:/data/db
